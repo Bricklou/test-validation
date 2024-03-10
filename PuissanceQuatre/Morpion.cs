@@ -10,7 +10,14 @@ public enum MorpionEnum
 
 public class Morpion
 {
-    public Grid<MorpionEnum> grille;
+    public Grid<MorpionEnum> grid;
+    public ConsoleGui<MorpionEnum> gui = new(
+        new Dictionary<MorpionEnum, string>()
+        {
+            { MorpionEnum.PlayerO , "O"},
+            { MorpionEnum.PlayerX , "X" }
+        }
+    );
     public bool quiterJeu;
     public bool tourDuJoueur = true;
 
@@ -18,7 +25,7 @@ public class Morpion
     {
         while (!quiterJeu)
         {
-            grille = new Grid<MorpionEnum>(3, 3);
+            grid = new Grid<MorpionEnum>(3, 3);
 
             while (!quiterJeu)
             {
@@ -51,18 +58,25 @@ public class Morpion
 
             if (!quiterJeu)
             {
-                Console.WriteLine("Appuyer sur [Echap] pour quitter, [Entrer] pour rejouer.");
-                GetKey:
-                switch (Console.ReadKey(true).Key)
+                gui.ShowMessage("Appuyer sur [Echap] pour quitter, [Entrer] pour rejouer.");
+                var invalidKey = true;
+                while (invalidKey)
                 {
-                    case ConsoleKey.Enter:
-                        break;
-                    case ConsoleKey.Escape:
-                        quiterJeu = true;
-                        Console.Clear();
-                        break;
-                    default:
-                        goto GetKey;
+                    var key = Console.ReadKey(true).Key;
+                    switch (key)
+                    {
+                        case ConsoleKey.Escape:
+                            quiterJeu = true;
+                            Console.Clear();
+                            invalidKey = false;
+                            break;
+                        case ConsoleKey.Enter:
+                            invalidKey = false;
+                            break;
+                        default:
+                            invalidKey = true;
+                            break;
+                    }
                 }
             }
         }
@@ -75,10 +89,8 @@ public class Morpion
 
         while (!quiterJeu && !moved)
         {
-            Console.Clear();
-            affichePlateau();
-            Console.WriteLine();
-            Console.WriteLine("Choisir une case valide est appuyer sur [Entrer]");
+            gui.ShowGrid(grid);
+            gui.ShowMessage("Choisir une case valide et appuyez sur [Entrer]");
             Console.SetCursorPosition((int)(column * 6 + 1), (int)(row * 4 + 1));
 
             switch (Console.ReadKey(true).Key)
@@ -116,9 +128,9 @@ public class Morpion
                         row = row + 1;
                     break;
                 case ConsoleKey.Enter:
-                    if (grille.GetPosition(row, column) is null)
+                    if (grid.GetPosition(row, column) is null)
                     {
-                        grille.SetPosition(row, column, MorpionEnum.PlayerX);
+                        grid.SetPosition(row, column, MorpionEnum.PlayerX);
                         moved = true;
                         quiterJeu = false;
                     }
@@ -135,10 +147,8 @@ public class Morpion
 
         while (!quiterJeu && !moved)
         {
-            Console.Clear();
-            affichePlateau();
-            Console.WriteLine();
-            Console.WriteLine("Choisir une case valide est appuyer sur [Entrer]");
+            gui.ShowGrid(grid);
+            gui.ShowMessage("Choisir une case valide et appuyez sur [Entrer]");
             Console.SetCursorPosition((int)(column * 6 + 1), (int)(row * 4 + 1));
 
             switch (Console.ReadKey(true).Key)
@@ -176,9 +186,9 @@ public class Morpion
                         row = row + 1;
                     break;
                 case ConsoleKey.Enter:
-                    if (grille.GetPosition(row, column) is null)
+                    if (grid.GetPosition(row, column) is null)
                     {
-                        grille.SetPosition(row, column, MorpionEnum.PlayerO);
+                        grid.SetPosition(row, column, MorpionEnum.PlayerO);
                         moved = true;
                         quiterJeu = false;
                     }
@@ -188,73 +198,29 @@ public class Morpion
         }
     }
 
-    public void affichePlateau()
-    {
-        Console.WriteLine();
-        for (uint i = 0; i < grille.Height; i++)
-        {
-            // Draw a first empty grid line with the values
-            for (uint j = 0; j < grille.Width; j++)
-            {
-                var symbol = " ";
-                var position = grille.GetPosition(i, j);
-                if (position is not null)
-                {
-                    symbol = position == MorpionEnum.PlayerX ? "X" : "O";
-                }
-                
-                Console.Write($" {symbol}  ");
-
-                if (j < grille.Width - 1)
-                {
-                    Console.Write("|");
-                }
-            }
-
-            Console.WriteLine();
-
-            // Draw a second grid line 
-            for (uint j = 0; j < grille.Width; j++)
-            {
-                Console.Write(new string(' ', 4));
-                if (j < grille.Width - 1)
-                {
-                    Console.Write("|");
-                }
-            }
-            Console.WriteLine();
-            if (i < grille.Height - 1)
-            {
-                Console.WriteLine(new string('-', (int)(grille.Width * 5)));
-            }
-        }
-        Console.WriteLine();
-    }
-
     public bool verifVictoire(MorpionEnum v)
     {
-        return grille.GetPosition(0, 0) == v && grille.GetPosition(1, 0) == v && grille.GetPosition(2, 0) == v ||
-               grille.GetPosition(0, 1) == v && grille.GetPosition(1, 1) == v && grille.GetPosition(2, 1) == v ||
-               grille.GetPosition(0, 2) == v && grille.GetPosition(1, 2) == v && grille.GetPosition(2, 2) == v ||
-               grille.GetPosition(0, 0) == v && grille.GetPosition(1, 1) == v && grille.GetPosition(2, 2) == v ||
-               grille.GetPosition(1, 0) == v && grille.GetPosition(1, 1) == v && grille.GetPosition(1, 2) == v ||
-               grille.GetPosition(2, 0) == v && grille.GetPosition(2, 1) == v && grille.GetPosition(2, 2) == v ||
-               grille.GetPosition(0, 0) == v && grille.GetPosition(1, 1) == v && grille.GetPosition(2, 2) == v ||
-               grille.GetPosition(2, 0) == v && grille.GetPosition(1, 1) == v && grille.GetPosition(0, 2) == v;
+        return grid.GetPosition(0, 0) == v && grid.GetPosition(1, 0) == v && grid.GetPosition(2, 0) == v ||
+               grid.GetPosition(0, 1) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 1) == v ||
+               grid.GetPosition(0, 2) == v && grid.GetPosition(1, 2) == v && grid.GetPosition(2, 2) == v ||
+               grid.GetPosition(0, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 2) == v ||
+               grid.GetPosition(1, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(1, 2) == v ||
+               grid.GetPosition(2, 0) == v && grid.GetPosition(2, 1) == v && grid.GetPosition(2, 2) == v ||
+               grid.GetPosition(0, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 2) == v ||
+               grid.GetPosition(2, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(0, 2) == v;
     }
 
     public bool verifEgalite()
     {
-        return grille.GetPosition(0, 0) == null && grille.GetPosition(1, 0) == null && grille.GetPosition(2, 0) == null &&
-               grille.GetPosition(0, 1) == null && grille.GetPosition(1, 1) == null && grille.GetPosition(2, 1) == null &&
-               grille.GetPosition(0, 2) == null && grille.GetPosition(1, 2) == null && grille.GetPosition(2, 2) == null;
+        return grid.GetPosition(0, 0) == null && grid.GetPosition(1, 0) == null && grid.GetPosition(2, 0) == null &&
+               grid.GetPosition(0, 1) == null && grid.GetPosition(1, 1) == null && grid.GetPosition(2, 1) == null &&
+               grid.GetPosition(0, 2) == null && grid.GetPosition(1, 2) == null && grid.GetPosition(2, 2) == null;
     }
 
 
     public void finPartie(string msg)
     {
-        Console.Clear();
-        affichePlateau();
-        Console.WriteLine(msg);
+        gui.ShowGrid(grid);
+        gui.ShowMessage(msg);
     }
 }
