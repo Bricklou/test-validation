@@ -6,7 +6,7 @@ public class PuissanceQuatreCaseFactory
     {
         return new PuissanceQuatreCaseX();
     }
-    
+
     public static PuissanceQuatreCaseO CreateCircle()
     {
         return new PuissanceQuatreCaseO();

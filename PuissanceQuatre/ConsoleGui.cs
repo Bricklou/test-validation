@@ -41,4 +41,53 @@ public class ConsoleGui<TCase> : IGui<TCase>
     {
         Console.WriteLine(message);
     }
+
+    public override (uint, uint) AskForPosition(Grid<TCase> grid)
+    {
+        var (row, column) = (0u, 0u);
+        var invalidKey = true;
+
+        while (invalidKey)
+        {
+            switch (Console.ReadKey(true).Key)
+            {
+                case ConsoleKey.RightArrow:
+                    if (column < grid.Width - 1)
+                        column += 1;
+                    break;
+
+                case ConsoleKey.LeftArrow:
+                    if (column > 0)
+                        column -= 1;
+                    break;
+
+                case ConsoleKey.UpArrow:
+                    if (row > 0)
+                        row -= 1;
+                    break;
+
+                case ConsoleKey.DownArrow:
+                    if (row < grid.Height - 1)
+                        row += 1;
+                    break;
+
+                case ConsoleKey.Enter:
+                    if (grid.GetPosition(row, column) is null) invalidKey = false;
+                    break;
+
+                default:
+                    invalidKey = true;
+                    break;
+            }
+
+            UpdateCursorPosition(row, column);
+        }
+
+        return (row, column);
+    }
+
+    private static void UpdateCursorPosition(uint row, uint column)
+    {
+        Console.SetCursorPosition((int)(column * 5 + 1), (int)(row * 3 + 1));
+    }
 }

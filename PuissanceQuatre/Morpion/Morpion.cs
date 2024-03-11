@@ -2,39 +2,29 @@
 
 public class Morpion
 {
-    public Grid<AbstractMorpionCase> grid;
-    public ConsoleGui<AbstractMorpionCase> gui = new();
-    public bool quiterJeu;
-    public bool tourDuJoueur = true;
+    private Grid<AbstractMorpionCase> _grid;
+    private readonly ConsoleGui<AbstractMorpionCase> _gui = new();
+    private bool _quiterJeu;
+    private bool _tourDuJoueur = true;
 
     public void BoucleJeu()
     {
-        while (!quiterJeu)
+        while (!_quiterJeu)
         {
-            grid = new Grid<AbstractMorpionCase>(3, 3);
+            _grid = new Grid<AbstractMorpionCase>(3, 3);
 
-            while (!quiterJeu)
+            while (!_quiterJeu)
             {
-                if (tourDuJoueur)
+                AbstractMorpionCase symbol = _tourDuJoueur ? MorpionCaseFactory.CreateCaseX() : MorpionCaseFactory.CreateCaseO();
+                TourJoueur(symbol);
+                if (VerifVictoire(symbol))
                 {
-                    tourJoueur();
-                    if (VerifVictoire(MorpionCaseFactory.CreateCaseX()))
-                    {
-                        FinPartie("Le joueur 1 à gagné !");
-                        break;
-                    }
-                }
-                else
-                {
-                    tourJoueur2();
-                    if (VerifVictoire(MorpionCaseFactory.CreateCaseO()))
-                    {
-                        FinPartie("Le joueur 2 à gagné !");
-                        break;
-                    }
+                    var name = _tourDuJoueur ? "1" : "2";
+                    FinPartie($"Le joueur {name} à gagné !");
+                    break;
                 }
 
-                tourDuJoueur = !tourDuJoueur;
+                _tourDuJoueur = !_tourDuJoueur;
                 if (VerifEgalite())
                 {
                     FinPartie("Aucun vainqueur, la partie se termine sur une égalité.");
@@ -42,9 +32,9 @@ public class Morpion
                 }
             }
 
-            if (!quiterJeu)
+            if (!_quiterJeu)
             {
-                gui.ShowMessage("Appuyer sur [Echap] pour quitter, [Entrer] pour rejouer.");
+                _gui.ShowMessage("Appuyer sur [Echap] pour quitter, [Entrer] pour rejouer.");
                 var invalidKey = true;
                 while (invalidKey)
                 {
@@ -52,7 +42,7 @@ public class Morpion
                     switch (key)
                     {
                         case ConsoleKey.Escape:
-                            quiterJeu = true;
+                            _quiterJeu = true;
                             Console.Clear();
                             invalidKey = false;
                             break;
@@ -68,145 +58,47 @@ public class Morpion
         }
     }
 
-    public void tourJoueur()
+    private void TourJoueur(AbstractMorpionCase symbol)
     {
-        var (row, column) = (0u, 0u);
         var moved = false;
 
-        while (!quiterJeu && !moved)
+        while (!_quiterJeu && !moved)
         {
-            gui.ShowGrid(grid);
-            gui.ShowMessage("Choisir une case valide et appuyez sur [Entrer]");
-            Console.SetCursorPosition((int)(column * 6 + 1), (int)(row * 4 + 1));
+            _gui.ShowGrid(_grid);
+            _gui.ShowMessage("Choisir une case valide et appuyez sur [Entrer]");
 
-            switch (Console.ReadKey(true).Key)
-            {
-                case ConsoleKey.Escape:
-                    quiterJeu = true;
-                    Console.Clear();
-                    break;
+            var (row, column) = _gui.AskForPosition(_grid);
 
-                case ConsoleKey.RightArrow:
-                    if (column >= 2)
-                        column = 0;
-                    else
-                        column = column + 1;
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    if (column <= 0)
-                        column = 2;
-                    else
-                        column = column - 1;
-                    break;
-
-                case ConsoleKey.UpArrow:
-                    if (row <= 0)
-                        row = 2;
-                    else
-                        row = row - 1;
-                    break;
-
-                case ConsoleKey.DownArrow:
-                    if (row >= 2)
-                        row = 0;
-                    else
-                        row = row + 1;
-                    break;
-                case ConsoleKey.Enter:
-                    if (grid.GetPosition(row, column) is null)
-                    {
-                        grid.SetPosition(row, column, MorpionCaseFactory.CreateCaseX());
-                        moved = true;
-                        quiterJeu = false;
-                    }
-
-                    break;
-            }
+            // TODO: implement the escape key to quit the game
+            _grid.SetPosition(row, column, symbol);
+            moved = true;
+            _quiterJeu = false;
         }
     }
 
-    public void tourJoueur2()
+    private bool VerifVictoire(AbstractMorpionCase v)
     {
-        var (row, column) = (0u, 0u);
-        var moved = false;
-
-        while (!quiterJeu && !moved)
-        {
-            gui.ShowGrid(grid);
-            gui.ShowMessage("Choisir une case valide et appuyez sur [Entrer]");
-            Console.SetCursorPosition((int)(column * 6 + 1), (int)(row * 4 + 1));
-
-            switch (Console.ReadKey(true).Key)
-            {
-                case ConsoleKey.Escape:
-                    quiterJeu = true;
-                    Console.Clear();
-                    break;
-
-                case ConsoleKey.RightArrow:
-                    if (column >= 2)
-                        column = 0;
-                    else
-                        column = column + 1;
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    if (column <= 0)
-                        column = 2;
-                    else
-                        column = column - 1;
-                    break;
-
-                case ConsoleKey.UpArrow:
-                    if (row <= 0)
-                        row = 2;
-                    else
-                        row = row - 1;
-                    break;
-
-                case ConsoleKey.DownArrow:
-                    if (row >= 2)
-                        row = 0;
-                    else
-                        row = row + 1;
-                    break;
-                case ConsoleKey.Enter:
-                    if (grid.GetPosition(row, column) is null)
-                    {
-                        grid.SetPosition(row, column, MorpionCaseFactory.CreateCaseO());
-                        moved = true;
-                        quiterJeu = false;
-                    }
-
-                    break;
-            }
-        }
+        return (v.Equals(_grid.GetPosition(0, 0)) && v.Equals(_grid.GetPosition(1, 0)) && v.Equals(_grid.GetPosition(2, 0))) ||
+               (v.Equals(_grid.GetPosition(0, 1)) && v.Equals(_grid.GetPosition(1, 1)) && v.Equals(_grid.GetPosition(2, 1))) ||
+               (v.Equals(_grid.GetPosition(0, 2)) && v.Equals(_grid.GetPosition(1, 2)) && v.Equals(_grid.GetPosition(2, 2))) ||
+               (v.Equals(_grid.GetPosition(0, 0)) && v.Equals(_grid.GetPosition(1, 1)) && v.Equals(_grid.GetPosition(2, 2))) ||
+               (v.Equals(_grid.GetPosition(1, 0)) && v.Equals(_grid.GetPosition(1, 1)) && v.Equals(_grid.GetPosition(1, 2))) ||
+               (v.Equals(_grid.GetPosition(2, 0)) && v.Equals(_grid.GetPosition(2, 1)) && v.Equals(_grid.GetPosition(2, 2))) ||
+               (v.Equals(_grid.GetPosition(0, 0)) && v.Equals(_grid.GetPosition(1, 1)) && v.Equals(_grid.GetPosition(2, 2))) ||
+               (v.Equals(_grid.GetPosition(2, 0)) && v.Equals(_grid.GetPosition(1, 1)) && v.Equals(_grid.GetPosition(0, 2)));
     }
 
-    public bool VerifVictoire(AbstractMorpionCase v)
+    private bool VerifEgalite()
     {
-        return (grid.GetPosition(0, 0) == v && grid.GetPosition(1, 0) == v && grid.GetPosition(2, 0) == v) ||
-               (grid.GetPosition(0, 1) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 1) == v) ||
-               (grid.GetPosition(0, 2) == v && grid.GetPosition(1, 2) == v && grid.GetPosition(2, 2) == v) ||
-               (grid.GetPosition(0, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 2) == v) ||
-               (grid.GetPosition(1, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(1, 2) == v) ||
-               (grid.GetPosition(2, 0) == v && grid.GetPosition(2, 1) == v && grid.GetPosition(2, 2) == v) ||
-               (grid.GetPosition(0, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 2) == v) ||
-               (grid.GetPosition(2, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(0, 2) == v);
-    }
-
-    public bool VerifEgalite()
-    {
-        return grid.GetPosition(0, 0) == null && grid.GetPosition(1, 0) == null && grid.GetPosition(2, 0) == null &&
-               grid.GetPosition(0, 1) == null && grid.GetPosition(1, 1) == null && grid.GetPosition(2, 1) == null &&
-               grid.GetPosition(0, 2) == null && grid.GetPosition(1, 2) == null && grid.GetPosition(2, 2) == null;
+        return _grid.GetPosition(0, 0) == null && _grid.GetPosition(1, 0) == null && _grid.GetPosition(2, 0) == null &&
+               _grid.GetPosition(0, 1) == null && _grid.GetPosition(1, 1) == null && _grid.GetPosition(2, 1) == null &&
+               _grid.GetPosition(0, 2) == null && _grid.GetPosition(1, 2) == null && _grid.GetPosition(2, 2) == null;
     }
 
 
     public void FinPartie(string msg)
     {
-        gui.ShowGrid(grid);
-        gui.ShowMessage(msg);
+        _gui.ShowGrid(_grid);
+        _gui.ShowMessage(msg);
     }
 }

@@ -6,7 +6,7 @@ public class MorpionCaseFactory
     {
         return new MorpionCaseX();
     }
-    
+
     public static MorpionCaseO CreateCaseO()
     {
         return new MorpionCaseO();
