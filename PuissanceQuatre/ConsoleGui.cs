@@ -1,4 +1,6 @@
-namespace MorpionApp;
+using PuissanceQuatre.Common;
+
+namespace PuissanceQuatre;
 
 public class ConsoleGui<TCase> : IGui<TCase>
     where TCase : AbstractCase

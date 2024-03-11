@@ -1,4 +1,4 @@
-namespace MorpionApp;
+namespace PuissanceQuatre.Common;
 
 public abstract class AbstractCase
 {
@@ -16,10 +16,7 @@ public abstract class AbstractCase
 
     public override bool Equals(object? obj)
     {
-        if (obj is AbstractCase other)
-        {
-            return other.Name == Name;
-        }
+        if (obj is AbstractCase other) return other.Name == Name;
 
         return false;
     }

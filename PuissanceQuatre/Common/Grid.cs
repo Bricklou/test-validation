@@ -1,4 +1,4 @@
-namespace MorpionApp;
+namespace PuissanceQuatre.Common;
 
 public class Grid<TCase> where TCase : AbstractCase
 {

@@ -1,6 +1,6 @@
 namespace PuissanceQuatreTest;
 
-public class Morpion
+public class TikTakToeTest
 {
     [Fact]
     public void Test1()

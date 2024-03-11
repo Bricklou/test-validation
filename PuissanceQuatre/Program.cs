@@ -1,4 +1,4 @@
-﻿namespace MorpionApp;
+﻿namespace PuissanceQuatre;
 
 public class Program
 {
@@ -9,12 +9,12 @@ public class Program
         switch (Console.ReadKey(true).Key)
         {
             case ConsoleKey.X:
-                var morpion = new Morpion();
-                morpion.BoucleJeu();
+                var morpion = new TikTakToe.TikTakToe();
+                morpion.GameLoop();
                 break;
             case ConsoleKey.P:
-                var puissanceQuatre = new PuissanceQuatre();
-                puissanceQuatre.BoucleJeu();
+                var puissanceQuatre = new Power4.Power4();
+                puissanceQuatre.GameLoop();
                 break;
             default:
                 goto GetKey;
@@ -30,12 +30,12 @@ public class Program
                 switch (Console.ReadKey(true).Key)
                 {
                     case ConsoleKey.X:
-                        var morpion = new Morpion();
-                        morpion.BoucleJeu();
+                        var morpion = new TikTakToe.TikTakToe();
+                        morpion.GameLoop();
                         break;
                     case ConsoleKey.P:
-                        var puissanceQuatre = new PuissanceQuatre();
-                        puissanceQuatre.BoucleJeu();
+                        var puissanceQuatre = new Power4.Power4();
+                        puissanceQuatre.GameLoop();
                         break;
                     default:
                         goto GetKey2;

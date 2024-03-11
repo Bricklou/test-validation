@@ -1,4 +1,4 @@
-namespace MorpionApp;
+namespace PuissanceQuatre.Common;
 
 public abstract class IGui<TCase> where TCase : AbstractCase
 {

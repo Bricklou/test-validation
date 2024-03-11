@@ -1,62 +1,70 @@
-﻿namespace MorpionApp;
+﻿using PuissanceQuatre.Common;
 
-public class PuissanceQuatre
+namespace PuissanceQuatre.Power4;
+
+public class Power4
 {
-    private Grid<AbstractPuissanceQuatreCase> _grid;
-    private readonly ConsoleGui<AbstractPuissanceQuatreCase> _gui = new();
-    private bool _quiterJeu;
-    private bool _tourDuJoueur = true;
+    private readonly ConsoleGui<AbstractPower4Case> _gui = new();
+    private bool _exitGame;
+    private Grid<AbstractPower4Case> _grid;
+    private bool _playerTurn = true;
 
-    public void BoucleJeu()
+    public void GameLoop()
     {
-        while (!_quiterJeu)
+        while (!_exitGame)
         {
-            _grid = new Grid<AbstractPuissanceQuatreCase>(4, 7);
+            _grid = new Grid<AbstractPower4Case>(4, 7);
 
-            while (!_quiterJeu)
+            while (!_exitGame)
             {
-                AbstractPuissanceQuatreCase symbol = _tourDuJoueur ? PuissanceQuatreCaseFactory.CreateCross() : PuissanceQuatreCaseFactory.CreateCircle();
-                TourJoueur(symbol);
+                AbstractPower4Case symbol =
+                    _playerTurn ? Power4CaseFactory.CreateCross() : Power4CaseFactory.CreateCircle();
+                PlayerTurn(symbol);
 
-                if (VerifVictoire(symbol))
+                if (CheckVictory(symbol))
                 {
-                    var name = _tourDuJoueur ? "1" : "2";
-                    FinPartie($"Le joueur {name} à gagné !");
+                    var name = _playerTurn ? "1" : "2";
+                    EndGame($"Le joueur {name} à gagné !");
                     break;
                 }
 
-                _tourDuJoueur = !_tourDuJoueur;
-                if (VerifEgalite())
+                _playerTurn = !_playerTurn;
+                if (CheckTie())
                 {
-                    FinPartie("Aucun vainqueur, la partie se termine sur une égalité.");
+                    EndGame("Aucun vainqueur, la partie se termine sur une égalité.");
                     break;
                 }
             }
 
-            if (!_quiterJeu)
+            if (!_exitGame)
             {
                 Console.WriteLine("Appuyer sur [Echap] pour quitter, [Entrer] pour rejouer.");
-                GetKey:
-                switch (Console.ReadKey(true).Key)
-                {
-                    case ConsoleKey.Enter:
-                        break;
-                    case ConsoleKey.Escape:
-                        _quiterJeu = true;
-                        Console.Clear();
-                        break;
-                    default:
-                        goto GetKey;
-                }
+                var invalidKey = true;
+
+                while (invalidKey)
+                    switch (Console.ReadKey(true).Key)
+                    {
+                        case ConsoleKey.Escape:
+                            _exitGame = true;
+                            Console.Clear();
+                            invalidKey = false;
+                            break;
+                        case ConsoleKey.Enter:
+                            invalidKey = false;
+                            break;
+                        default:
+                            invalidKey = true;
+                            break;
+                    }
             }
         }
     }
 
-    private void TourJoueur(AbstractPuissanceQuatreCase symbol)
+    private void PlayerTurn(AbstractPower4Case symbol)
     {
         var moved = false;
 
-        while (!_quiterJeu && !moved)
+        while (!_exitGame && !moved)
         {
             _gui.ShowGrid(_grid);
             _gui.ShowMessage("Choisir une case valide et appuyez sur [Entrer]");
@@ -66,10 +74,11 @@ public class PuissanceQuatre
             // TODO: implement the escape key to quit the game
             _grid.SetPosition(row, column, symbol);
             moved = true;
-            _quiterJeu = false;
+            _exitGame = false;
         }
     }
-    private bool VerifVictoire(AbstractPuissanceQuatreCase c)
+
+    private bool CheckVictory(AbstractPower4Case c)
     {
         return (_grid.GetPosition(0, 0) == c && _grid.GetPosition(1, 0) == c && _grid.GetPosition(2, 0) == c &&
                 _grid.GetPosition(3, 0) == c) ||
@@ -135,7 +144,7 @@ public class PuissanceQuatre
                 _grid.GetPosition(3, 3) == c);
     }
 
-    private bool VerifEgalite()
+    private bool CheckTie()
     {
         return _grid.GetPosition(0, 0) != null && _grid.GetPosition(0, 1) != null &&
                _grid.GetPosition(0, 2) != null && _grid.GetPosition(0, 3) != null &&
@@ -155,9 +164,9 @@ public class PuissanceQuatre
     }
 
 
-    private void FinPartie(string msg)
+    private void EndGame(string msg)
     {
-     _gui.ShowGrid(_grid);
-     _gui.ShowMessage(msg);
+        _gui.ShowGrid(_grid);
+        _gui.ShowMessage(msg);
     }
 }

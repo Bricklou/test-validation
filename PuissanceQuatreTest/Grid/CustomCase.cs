@@ -1,6 +1,6 @@
-using MorpionApp;
+using PuissanceQuatre.Common;
 
-namespace PuissanceQuatreTest;
+namespace PuissanceQuatreTest.Grid;
 
 public abstract class AbstractCustomCase : AbstractCase
 {
