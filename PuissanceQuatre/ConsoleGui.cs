@@ -1,13 +1,9 @@
 namespace MorpionApp;
 
-public class ConsoleGui<TEnumType> : IGui<TEnumType>
-    where TEnumType : struct, Enum
+public class ConsoleGui<TCase> : IGui<TCase>
+    where TCase : AbstractCase
 {
-    public ConsoleGui(Dictionary<TEnumType, string> displayValues) : base(displayValues)
-    {
-    }
-
-    public override void ShowGrid(Grid<TEnumType> grid)
+    public override void ShowGrid(Grid<TCase> grid)
     {
         Console.Clear();
         Console.WriteLine();
@@ -18,17 +14,11 @@ public class ConsoleGui<TEnumType> : IGui<TEnumType>
             {
                 var symbol = " ";
                 var position = grid.GetPosition(i, j);
-                if (position is not null)
-                {
-                    symbol = DisplayValues[position.Value];
-                }
-                
+                if (position is not null) symbol = position.DisplayName();
+
                 Console.Write($" {symbol}  ");
 
-                if (j < grid.Width - 1)
-                {
-                    Console.Write("|");
-                }
+                if (j < grid.Width - 1) Console.Write("|");
             }
 
             Console.WriteLine();
@@ -37,17 +27,13 @@ public class ConsoleGui<TEnumType> : IGui<TEnumType>
             for (uint j = 0; j < grid.Width; j++)
             {
                 Console.Write(new string(' ', 4));
-                if (j < grid.Width - 1)
-                {
-                    Console.Write("|");
-                }
+                if (j < grid.Width - 1) Console.Write("|");
             }
+
             Console.WriteLine();
-            if (i < grid.Height - 1)
-            {
-                Console.WriteLine(new string('-', (int)(grid.Width * 5)));
-            }
+            if (i < grid.Height - 1) Console.WriteLine(new string('-', (int)(grid.Width * 5)));
         }
+
         Console.WriteLine();
     }
 

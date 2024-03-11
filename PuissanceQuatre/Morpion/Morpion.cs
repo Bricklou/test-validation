@@ -1,23 +1,9 @@
-﻿using System.ComponentModel;
-
-namespace MorpionApp;
-
-public enum MorpionEnum
-{
-    PlayerX,
-    PlayerO
-}
+﻿namespace MorpionApp;
 
 public class Morpion
 {
-    public Grid<MorpionEnum> grid;
-    public ConsoleGui<MorpionEnum> gui = new(
-        new Dictionary<MorpionEnum, string>()
-        {
-            { MorpionEnum.PlayerO , "O"},
-            { MorpionEnum.PlayerX , "X" }
-        }
-    );
+    public Grid<AbstractMorpionCase> grid;
+    public ConsoleGui<AbstractMorpionCase> gui = new();
     public bool quiterJeu;
     public bool tourDuJoueur = true;
 
@@ -25,33 +11,33 @@ public class Morpion
     {
         while (!quiterJeu)
         {
-            grid = new Grid<MorpionEnum>(3, 3);
+            grid = new Grid<AbstractMorpionCase>(3, 3);
 
             while (!quiterJeu)
             {
                 if (tourDuJoueur)
                 {
                     tourJoueur();
-                    if (verifVictoire(MorpionEnum.PlayerX))
+                    if (VerifVictoire(MorpionCaseFactory.CreateCaseX()))
                     {
-                        finPartie("Le joueur 1 à gagné !");
+                        FinPartie("Le joueur 1 à gagné !");
                         break;
                     }
                 }
                 else
                 {
                     tourJoueur2();
-                    if (verifVictoire(MorpionEnum.PlayerO))
+                    if (VerifVictoire(MorpionCaseFactory.CreateCaseO()))
                     {
-                        finPartie("Le joueur 2 à gagné !");
+                        FinPartie("Le joueur 2 à gagné !");
                         break;
                     }
                 }
 
                 tourDuJoueur = !tourDuJoueur;
-                if (verifEgalite())
+                if (VerifEgalite())
                 {
-                    finPartie("Aucun vainqueur, la partie se termine sur une égalité.");
+                    FinPartie("Aucun vainqueur, la partie se termine sur une égalité.");
                     break;
                 }
             }
@@ -130,7 +116,7 @@ public class Morpion
                 case ConsoleKey.Enter:
                     if (grid.GetPosition(row, column) is null)
                     {
-                        grid.SetPosition(row, column, MorpionEnum.PlayerX);
+                        grid.SetPosition(row, column, MorpionCaseFactory.CreateCaseX());
                         moved = true;
                         quiterJeu = false;
                     }
@@ -188,7 +174,7 @@ public class Morpion
                 case ConsoleKey.Enter:
                     if (grid.GetPosition(row, column) is null)
                     {
-                        grid.SetPosition(row, column, MorpionEnum.PlayerO);
+                        grid.SetPosition(row, column, MorpionCaseFactory.CreateCaseO());
                         moved = true;
                         quiterJeu = false;
                     }
@@ -198,19 +184,19 @@ public class Morpion
         }
     }
 
-    public bool verifVictoire(MorpionEnum v)
+    public bool VerifVictoire(AbstractMorpionCase v)
     {
-        return grid.GetPosition(0, 0) == v && grid.GetPosition(1, 0) == v && grid.GetPosition(2, 0) == v ||
-               grid.GetPosition(0, 1) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 1) == v ||
-               grid.GetPosition(0, 2) == v && grid.GetPosition(1, 2) == v && grid.GetPosition(2, 2) == v ||
-               grid.GetPosition(0, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 2) == v ||
-               grid.GetPosition(1, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(1, 2) == v ||
-               grid.GetPosition(2, 0) == v && grid.GetPosition(2, 1) == v && grid.GetPosition(2, 2) == v ||
-               grid.GetPosition(0, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 2) == v ||
-               grid.GetPosition(2, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(0, 2) == v;
+        return (grid.GetPosition(0, 0) == v && grid.GetPosition(1, 0) == v && grid.GetPosition(2, 0) == v) ||
+               (grid.GetPosition(0, 1) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 1) == v) ||
+               (grid.GetPosition(0, 2) == v && grid.GetPosition(1, 2) == v && grid.GetPosition(2, 2) == v) ||
+               (grid.GetPosition(0, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 2) == v) ||
+               (grid.GetPosition(1, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(1, 2) == v) ||
+               (grid.GetPosition(2, 0) == v && grid.GetPosition(2, 1) == v && grid.GetPosition(2, 2) == v) ||
+               (grid.GetPosition(0, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(2, 2) == v) ||
+               (grid.GetPosition(2, 0) == v && grid.GetPosition(1, 1) == v && grid.GetPosition(0, 2) == v);
     }
 
-    public bool verifEgalite()
+    public bool VerifEgalite()
     {
         return grid.GetPosition(0, 0) == null && grid.GetPosition(1, 0) == null && grid.GetPosition(2, 0) == null &&
                grid.GetPosition(0, 1) == null && grid.GetPosition(1, 1) == null && grid.GetPosition(2, 1) == null &&
@@ -218,7 +204,7 @@ public class Morpion
     }
 
 
-    public void finPartie(string msg)
+    public void FinPartie(string msg)
     {
         gui.ShowGrid(grid);
         gui.ShowMessage(msg);
