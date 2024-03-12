@@ -1,14 +1,22 @@
 ﻿using PuissanceQuatre.Common;
+using PuissanceQuatre.Common.Rules;
 
 namespace PuissanceQuatre.TikTakToe;
 
-public class TikTakToe
+public class TikTakToe : AbstractBoardGame<AbstractTikTakToeCase>
 {
+    private const uint TikTakToeWinLength = 3;
+    
     private readonly ConsoleGui<AbstractTikTakToeCase> _gui = new();
     private bool _exitGame;
-    private Grid<AbstractTikTakToeCase> _grid;
     private bool _playerTurn = true;
-
+    
+    public TikTakToe(): base(TikTakToeCaseFactory.CreateTikTakToeGrid(), [
+        new DiagonalRule<AbstractTikTakToeCase>(TikTakToeWinLength),
+        new HorizontalRule<AbstractTikTakToeCase>(TikTakToeWinLength),
+        new VerticalRule<AbstractTikTakToeCase>(TikTakToeWinLength)
+    ]) {}
+    
     public void GameLoop()
     {
         while (!_exitGame)
@@ -19,8 +27,9 @@ public class TikTakToe
             {
                 AbstractTikTakToeCase symbol =
                     _playerTurn ? TikTakToeCaseFactory.CreateCaseX() : TikTakToeCaseFactory.CreateCaseO();
-                PlayerTurn(symbol);
-                if (CheckVictory(symbol))
+                var (row, column) = PlayerTurn(symbol);
+
+                if (CheckVictory(symbol, row, column))
                 {
                     var name = _playerTurn ? "1" : "2";
                     EndGame($"Le joueur {name} à gagné !");
@@ -61,8 +70,9 @@ public class TikTakToe
         }
     }
 
-    private void PlayerTurn(AbstractTikTakToeCase symbol)
+    private (uint, uint) PlayerTurn(AbstractTikTakToeCase symbol)
     {
+        var (x, y) = (0u, 0u);
         var moved = false;
 
         while (!_exitGame && !moved)
@@ -70,33 +80,15 @@ public class TikTakToe
             _gui.ShowGrid(_grid);
             _gui.ShowMessage("Choisir une case valide et appuyez sur [Entrer]");
 
-            var (row, column) = _gui.AskForPosition(_grid);
+            (x, y) = _gui.AskForPosition(_grid);
 
             // TODO: implement the escape key to quit the game
-            _grid.SetPosition(row, column, symbol);
+            _grid.SetPosition(x, y, symbol);
             moved = true;
             _exitGame = false;
         }
-    }
-
-    private bool CheckVictory(AbstractTikTakToeCase v)
-    {
-        return (v.Equals(_grid.GetPosition(0, 0)) && v.Equals(_grid.GetPosition(1, 0)) &&
-                v.Equals(_grid.GetPosition(2, 0))) ||
-               (v.Equals(_grid.GetPosition(0, 1)) && v.Equals(_grid.GetPosition(1, 1)) &&
-                v.Equals(_grid.GetPosition(2, 1))) ||
-               (v.Equals(_grid.GetPosition(0, 2)) && v.Equals(_grid.GetPosition(1, 2)) &&
-                v.Equals(_grid.GetPosition(2, 2))) ||
-               (v.Equals(_grid.GetPosition(0, 0)) && v.Equals(_grid.GetPosition(1, 1)) &&
-                v.Equals(_grid.GetPosition(2, 2))) ||
-               (v.Equals(_grid.GetPosition(1, 0)) && v.Equals(_grid.GetPosition(1, 1)) &&
-                v.Equals(_grid.GetPosition(1, 2))) ||
-               (v.Equals(_grid.GetPosition(2, 0)) && v.Equals(_grid.GetPosition(2, 1)) &&
-                v.Equals(_grid.GetPosition(2, 2))) ||
-               (v.Equals(_grid.GetPosition(0, 0)) && v.Equals(_grid.GetPosition(1, 1)) &&
-                v.Equals(_grid.GetPosition(2, 2))) ||
-               (v.Equals(_grid.GetPosition(2, 0)) && v.Equals(_grid.GetPosition(1, 1)) &&
-                v.Equals(_grid.GetPosition(0, 2)));
+        
+        return (x, y);
     }
 
     private bool CheckTie()

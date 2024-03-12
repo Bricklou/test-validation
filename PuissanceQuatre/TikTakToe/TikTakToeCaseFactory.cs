@@ -1,3 +1,5 @@
+using PuissanceQuatre.Common;
+
 namespace PuissanceQuatre.TikTakToe;
 
 public class TikTakToeCaseFactory
@@ -10,5 +12,10 @@ public class TikTakToeCaseFactory
     public static TikTakToeCaseO CreateCaseO()
     {
         return new TikTakToeCaseO();
+    }
+
+    public static Grid<AbstractTikTakToeCase> CreateTikTakToeGrid()
+    {
+        return new Grid<AbstractTikTakToeCase>(3, 3);
     }
 }
