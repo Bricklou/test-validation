@@ -48,6 +48,8 @@ public class TikTakToe : AbstractBoardGame<AbstractTikTakToeCase>
             {
                 _gui.ShowMessage("Appuyer sur [Echap] pour quitter, [Entrer] pour rejouer.");
                 var invalidKey = true;
+                
+                // TODO: This code should be handled inside the ConsoleGui class since it is GUI related (especially Console related)
                 while (invalidKey)
                 {
                     var key = Console.ReadKey(true).Key;
@@ -80,6 +82,8 @@ public class TikTakToe : AbstractBoardGame<AbstractTikTakToeCase>
             _gui.ShowGrid(_grid);
             _gui.ShowMessage("Choisir une case valide et appuyez sur [Entrer]");
 
+            // TODO: Shouldn't the "AskForPosition" be declared in a Player class? In order to have different logic depending on if
+            // the player is a human or an AI
             (x, y) = _gui.AskForPosition(_grid);
 
             // TODO: implement the escape key to quit the game
