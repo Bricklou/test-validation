@@ -1,6 +1,6 @@
 using PuissanceQuatre.Common;
 
-namespace PuissanceQuatreTest.Grid;
+namespace PuissanceQuatreTest;
 
 public abstract class AbstractCustomCase : AbstractCase
 {
