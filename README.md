@@ -26,3 +26,17 @@ Pour résoudre ces problèmes, il sera envisageable de mettre en place certaines
 - Supprimer le code mort
 - Utiliser des tests unitaires pour valider le code et s'assurer de son bon fonctionnement
 - Ajouter des conditions de contrôle pour s'assurer des paramètres d'entré des méthodes
+
+
+## Développement des fonctionnalités manquantes
+
+Pour le développement des fonctionnalités manquantes, il sera nécessaire :
+- d'extraire la logique du joueur dans une classe dédié (`AbstractPlayer`), pour permettre l'ajout d'un `ComputerPlayer`
+en plus du `HumanPlayer`. Chacun auront une logique dédié pour jouer un coup. Par exemple, le `HumanPlayer` se servira
+le l'implémentation de `IGui`` pour demander à l'utilisateur de jouer un coup, tandis que le `ComputerPlayer` utilisera
+une logique "calculée" pour jouer un coup.
+
+- pour la persistance des données, il faudra créer une classe `GameSerializer` qui permettra de sauvegarder et charger
+les données. Sur ce point, j'ai beaucoup de difficulté à imaginer une solution. En effet, pour respecter les principes
+de conceptions, l'idée aurait été de garder le plus d'attributs de classe privée. Hors, pour sauvegarder les données,
+nous aurions besoin de les rendre accessible, brisant ainsi l'idée que nos attributs de classe doivent être privé.
