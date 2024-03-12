@@ -13,10 +13,7 @@ public class DiagonalRuleTest
         var rule = new DiagonalRule<AbstractCustomCase>(3);
 
         // Assume AbstractCustomCase has a constructor that takes a symbol
-        for (uint i = 0; i < 3; i++)
-        {
-            grid.SetPosition(i, i, new CustomCaseX());
-        }
+        for (uint i = 0; i < 3; i++) grid.SetPosition(i, i, new CustomCaseX());
 
         // Act
         var result = rule.Check(grid, 0, 0);
@@ -33,10 +30,7 @@ public class DiagonalRuleTest
         var rule = new DiagonalRule<AbstractCustomCase>(3);
 
         // Assume AbstractCustomCase has a constructor that takes a symbol
-        for (uint i = 0; i < 3; i++)
-        {
-            grid.SetPosition(i, 4 - i, new CustomCaseX());
-        }
+        for (uint i = 0; i < 3; i++) grid.SetPosition(i, 4 - i, new CustomCaseX());
 
         // Act
         var result = rule.Check(grid, 0, 4);
@@ -53,10 +47,7 @@ public class DiagonalRuleTest
         var rule = new DiagonalRule<AbstractCustomCase>(3);
 
         // Assume AbstractCustomCase has a constructor that takes a symbol
-        for (uint i = 0; i < 3; i++)
-        {
-            grid.SetPosition(4 - i, i, new CustomCaseX());
-        }
+        for (uint i = 0; i < 3; i++) grid.SetPosition(4 - i, i, new CustomCaseX());
 
         // Act
         var result = rule.Check(grid, 4, 0);
@@ -73,10 +64,7 @@ public class DiagonalRuleTest
         var rule = new DiagonalRule<AbstractCustomCase>(3);
 
         // Assume AbstractCustomCase has a constructor that takes a symbol
-        for (uint i = 0; i < 3; i++)
-        {
-            grid.SetPosition(4 - i, 4 - i, new CustomCaseX());
-        }
+        for (uint i = 0; i < 3; i++) grid.SetPosition(4 - i, 4 - i, new CustomCaseX());
 
         // Act
         var result = rule.Check(grid, 4, 4);

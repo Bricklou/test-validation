@@ -1,27 +1,37 @@
 ﻿using PuissanceQuatre.Common;
+using PuissanceQuatre.Common.Rules;
 
 namespace PuissanceQuatre.Power4;
 
-public class Power4
+public class Power4 : AbstractBoardGame<AbstractPower4Case>
 {
+    private const uint Power4WinLength = 4;
+
     private readonly ConsoleGui<AbstractPower4Case> _gui = new();
     private bool _exitGame;
-    private Grid<AbstractPower4Case> _grid;
     private bool _playerTurn = true;
+
+    public Power4() : base(Power4CaseFactory.CreatePower4Grid(), [
+        new DiagonalRule<AbstractPower4Case>(Power4WinLength),
+        new HorizontalRule<AbstractPower4Case>(Power4WinLength),
+        new VerticalRule<AbstractPower4Case>(Power4WinLength)
+    ])
+    {
+    }
 
     public void GameLoop()
     {
         while (!_exitGame)
         {
-            _grid = new Grid<AbstractPower4Case>(4, 7);
+            _grid = new Grid<AbstractPower4Case>(7, 4);
 
             while (!_exitGame)
             {
                 AbstractPower4Case symbol =
                     _playerTurn ? Power4CaseFactory.CreateCross() : Power4CaseFactory.CreateCircle();
-                PlayerTurn(symbol);
+                var (row, column) = PlayerTurn(symbol);
 
-                if (CheckVictory(symbol))
+                if (CheckVictory(symbol, row, column))
                 {
                     var name = _playerTurn ? "1" : "2";
                     EndGame($"Le joueur {name} à gagné !");
@@ -60,8 +70,9 @@ public class Power4
         }
     }
 
-    private void PlayerTurn(AbstractPower4Case symbol)
+    private (uint, uint) PlayerTurn(AbstractPower4Case symbol)
     {
+        var (x, y) = (0u, 0u);
         var moved = false;
 
         while (!_exitGame && !moved)
@@ -69,100 +80,18 @@ public class Power4
             _gui.ShowGrid(_grid);
             _gui.ShowMessage("Choisir une case valide et appuyez sur [Entrer]");
 
-            var (row, column) = _gui.AskForPosition(_grid);
+            (x, y) = _gui.AskForPosition(_grid);
 
-            // TODO: implement the escape key to quit the game
-            _grid.SetPosition(row, column, symbol);
+            // Make the case fall to the bottom of the grid (if possible) until the first occupied case or the last row
+            while (y < _grid.Height - 1 && _grid.GetPosition(x, y + 1) is null) y++;
+
+            _grid.SetPosition(x, y, symbol);
             moved = true;
             _exitGame = false;
         }
-    }
 
-    private bool CheckVictory(AbstractPower4Case c)
-    {
-        return (_grid.GetPosition(0, 0) == c && _grid.GetPosition(1, 0) == c && _grid.GetPosition(2, 0) == c &&
-                _grid.GetPosition(3, 0) == c) ||
-               (_grid.GetPosition(0, 1) == c && _grid.GetPosition(1, 1) == c && _grid.GetPosition(2, 1) == c &&
-                _grid.GetPosition(3, 1) == c) ||
-               (_grid.GetPosition(0, 2) == c && _grid.GetPosition(1, 2) == c && _grid.GetPosition(2, 2) == c &&
-                _grid.GetPosition(3, 2) == c) ||
-               (_grid.GetPosition(0, 3) == c && _grid.GetPosition(1, 3) == c && _grid.GetPosition(2, 3) == c &&
-                _grid.GetPosition(3, 3) == c) ||
-               (_grid.GetPosition(0, 4) == c && _grid.GetPosition(1, 4) == c && _grid.GetPosition(2, 4) == c &&
-                _grid.GetPosition(3, 4) == c) ||
-               (_grid.GetPosition(0, 5) == c && _grid.GetPosition(1, 5) == c && _grid.GetPosition(2, 5) == c &&
-                _grid.GetPosition(3, 5) == c) ||
-               (_grid.GetPosition(0, 6) == c && _grid.GetPosition(1, 6) == c && _grid.GetPosition(2, 6) == c &&
-                _grid.GetPosition(3, 6) == c) ||
-               (_grid.GetPosition(0, 0) == c && _grid.GetPosition(0, 1) == c && _grid.GetPosition(0, 2) == c &&
-                _grid.GetPosition(0, 3) == c) ||
-               (_grid.GetPosition(0, 1) == c && _grid.GetPosition(0, 2) == c && _grid.GetPosition(0, 3) == c &&
-                _grid.GetPosition(0, 4) == c) ||
-               (_grid.GetPosition(0, 2) == c && _grid.GetPosition(0, 3) == c && _grid.GetPosition(0, 3) == c &&
-                _grid.GetPosition(0, 5) == c) ||
-               (_grid.GetPosition(0, 3) == c && _grid.GetPosition(0, 4) == c && _grid.GetPosition(0, 5) == c &&
-                _grid.GetPosition(0, 6) == c) ||
-               (_grid.GetPosition(1, 0) == c && _grid.GetPosition(1, 1) == c && _grid.GetPosition(1, 2) == c &&
-                _grid.GetPosition(1, 3) == c) ||
-               (_grid.GetPosition(1, 1) == c && _grid.GetPosition(1, 2) == c && _grid.GetPosition(1, 3) == c &&
-                _grid.GetPosition(1, 4) == c) ||
-               (_grid.GetPosition(1, 2) == c && _grid.GetPosition(1, 3) == c && _grid.GetPosition(1, 4) == c &&
-                _grid.GetPosition(1, 5) == c) ||
-               (_grid.GetPosition(1, 4) == c && _grid.GetPosition(1, 4) == c && _grid.GetPosition(1, 5) == c &&
-                _grid.GetPosition(1, 6) == c) ||
-               (_grid.GetPosition(2, 0) == c && _grid.GetPosition(2, 1) == c && _grid.GetPosition(2, 2) == c &&
-                _grid.GetPosition(2, 3) == c) ||
-               (_grid.GetPosition(2, 1) == c && _grid.GetPosition(2, 2) == c && _grid.GetPosition(2, 3) == c &&
-                _grid.GetPosition(2, 4) == c) ||
-               (_grid.GetPosition(2, 2) == c && _grid.GetPosition(2, 3) == c && _grid.GetPosition(2, 3) == c &&
-                _grid.GetPosition(2, 5) == c) ||
-               (_grid.GetPosition(2, 3) == c && _grid.GetPosition(2, 4) == c && _grid.GetPosition(2, 5) == c &&
-                _grid.GetPosition(2, 6) == c) ||
-               (_grid.GetPosition(3, 0) == c && _grid.GetPosition(3, 1) == c && _grid.GetPosition(3, 2) == c &&
-                _grid.GetPosition(3, 3) == c) ||
-               (_grid.GetPosition(3, 1) == c && _grid.GetPosition(3, 2) == c && _grid.GetPosition(3, 3) == c &&
-                _grid.GetPosition(3, 4) == c) ||
-               (_grid.GetPosition(3, 2) == c && _grid.GetPosition(3, 3) == c && _grid.GetPosition(3, 4) == c &&
-                _grid.GetPosition(3, 5) == c) ||
-               (_grid.GetPosition(3, 3) == c && _grid.GetPosition(3, 4) == c && _grid.GetPosition(3, 5) == c &&
-                _grid.GetPosition(3, 6) == c) ||
-               (_grid.GetPosition(0, 0) == c && _grid.GetPosition(1, 1) == c && _grid.GetPosition(2, 2) == c &&
-                _grid.GetPosition(3, 3) == c) ||
-               (_grid.GetPosition(0, 1) == c && _grid.GetPosition(1, 2) == c && _grid.GetPosition(2, 3) == c &&
-                _grid.GetPosition(3, 4) == c) ||
-               (_grid.GetPosition(0, 2) == c && _grid.GetPosition(1, 3) == c && _grid.GetPosition(2, 4) == c &&
-                _grid.GetPosition(3, 5) == c) ||
-               (_grid.GetPosition(0, 3) == c && _grid.GetPosition(1, 4) == c && _grid.GetPosition(2, 5) == c &&
-                _grid.GetPosition(3, 6) == c) ||
-               (_grid.GetPosition(0, 3) == c && _grid.GetPosition(1, 2) == c && _grid.GetPosition(2, 1) == c &&
-                _grid.GetPosition(3, 0) == c) ||
-               (_grid.GetPosition(0, 4) == c && _grid.GetPosition(1, 4) == c && _grid.GetPosition(2, 2) == c &&
-                _grid.GetPosition(3, 1) == c) ||
-               (_grid.GetPosition(0, 5) == c && _grid.GetPosition(1, 3) == c && _grid.GetPosition(2, 3) == c &&
-                _grid.GetPosition(3, 2) == c) ||
-               (_grid.GetPosition(0, 6) == c && _grid.GetPosition(1, 5) == c && _grid.GetPosition(2, 4) == c &&
-                _grid.GetPosition(3, 3) == c);
+        return (x, y);
     }
-
-    private bool CheckTie()
-    {
-        return _grid.GetPosition(0, 0) != null && _grid.GetPosition(0, 1) != null &&
-               _grid.GetPosition(0, 2) != null && _grid.GetPosition(0, 3) != null &&
-               _grid.GetPosition(0, 4) != null && _grid.GetPosition(0, 5) != null &&
-               _grid.GetPosition(0, 6) != null &&
-               _grid.GetPosition(1, 0) != null && _grid.GetPosition(1, 1) != null &&
-               _grid.GetPosition(1, 2) != null && _grid.GetPosition(1, 3) != null &&
-               _grid.GetPosition(1, 4) != null && _grid.GetPosition(1, 5) != null &&
-               _grid.GetPosition(1, 6) != null &&
-               _grid.GetPosition(2, 0) != null && _grid.GetPosition(2, 1) != null &&
-               _grid.GetPosition(1, 2) != null && _grid.GetPosition(2, 3) != null &&
-               _grid.GetPosition(2, 4) != null && _grid.GetPosition(2, 5) != null &&
-               _grid.GetPosition(2, 6) != null &&
-               _grid.GetPosition(3, 0) != null && _grid.GetPosition(3, 1) != null &&
-               _grid.GetPosition(3, 2) != null && _grid.GetPosition(3, 3) != null &&
-               _grid.GetPosition(3, 4) != null && _grid.GetPosition(3, 5) != null && _grid.GetPosition(3, 5) != null;
-    }
-
 
     private void EndGame(string msg)
     {

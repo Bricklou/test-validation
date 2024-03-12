@@ -1,5 +1,4 @@
 using PuissanceQuatre.Common;
-using Xunit;
 using PuissanceQuatre.Common.Rules;
 using PuissanceQuatreTest;
 
@@ -13,10 +12,7 @@ public class HorizontalRuleTest
         var rule = new HorizontalRule<AbstractCase>(3);
 
         // Assume AbstractCase has a constructor that takes a symbol
-        for (uint i = 0; i < 3; i++)
-        {
-            grid.SetPosition(i, 0, new CustomCaseX());
-        }
+        for (uint i = 0; i < 3; i++) grid.SetPosition(i, 0, new CustomCaseX());
 
         // Act
         var result = rule.Check(grid, 0, 0);
@@ -33,10 +29,7 @@ public class HorizontalRuleTest
         var rule = new HorizontalRule<AbstractCase>(3);
 
         // Assume AbstractCase has a constructor that takes a symbol
-        for (uint i = 0; i < 3; i++)
-        {
-            grid.SetPosition(4 - i, 0, new CustomCaseX());
-        }
+        for (uint i = 0; i < 3; i++) grid.SetPosition(4 - i, 0, new CustomCaseX());
 
         // Act
         var result = rule.Check(grid, 4, 0);
