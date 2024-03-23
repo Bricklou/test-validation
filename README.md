@@ -33,7 +33,7 @@ Pour résoudre ces problèmes, il sera envisageable de mettre en place certaines
 Pour le développement des fonctionnalités manquantes, il sera nécessaire :
 - d'extraire la logique du joueur dans une classe dédié (`AbstractPlayer`), pour permettre l'ajout d'un `ComputerPlayer`
 en plus du `HumanPlayer`. Chacun auront une logique dédié pour jouer un coup. Par exemple, le `HumanPlayer` se servira
-le l'implémentation de `IGui`` pour demander à l'utilisateur de jouer un coup, tandis que le `ComputerPlayer` utilisera
+le l'implémentation de `IGui` pour demander à l'utilisateur de jouer un coup, tandis que le `ComputerPlayer` utilisera
 une logique "calculée" pour jouer un coup.
 
 - pour la persistance des données, il faudra créer une classe `GameSerializer` qui permettra de sauvegarder et charger
