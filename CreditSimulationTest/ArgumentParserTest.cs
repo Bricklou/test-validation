@@ -71,7 +71,7 @@ public class ArgumentParserTest
         var credit = parser.Parse(["50000", NineYears.ToString(), "1"]);
 
 
-        Assert.Equal(50_000, credit.Amount);
+        Assert.Equal(50_000, credit.TotalAmount);
         Assert.Equal(NineYears, credit.Duration);
         Assert.Equal(1, credit.Rate);
     }
