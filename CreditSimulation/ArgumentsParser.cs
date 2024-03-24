@@ -19,9 +19,9 @@ public class ArgumentsParser
             throw new ArgumentException("Argument parser accept only numbers");
         }
 
-        if (amount <= 0 || duration <= 0 || rate <= 0)
+        if (amount <= 50_000 || duration < 0 || duration > 25 || rate <= 0)
         {
-            throw new ArgumentOutOfRangeException("Arguments must be greater than 0");
+            throw new ArgumentOutOfRangeException("Arguments are out of range");
         }
     }
 }
