@@ -23,4 +23,10 @@ public class ArgumentParserTest
     {
         Assert.Throws<ArgumentException>(() => parser.Parse(["arg1", "arg2"]));
     }
+
+    [Fact]
+    public void ParseInputTest_WithStringArguments_ThrowError()
+    {
+        Assert.Throws<ArgumentException>(() => parser.Parse(["arg1", "arg2", "arg3"]));
+    }
 }
