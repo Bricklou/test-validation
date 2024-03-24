@@ -66,4 +66,11 @@ public class CreditTest
         var credit = new Credit(50000, 9 * MonthPerYear, 1);
         Assert.Throws<ArgumentOutOfRangeException>(() => credit.Pay(10000, 10 * MonthPerYear));
     }
+    
+    [Fact]
+    public void CreditTest_WhenNegativeAmount_ThrowError()
+    {
+        var credit = new Credit(50000, 9 * MonthPerYear, 1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => credit.Pay(-10000));
+    }
 }
