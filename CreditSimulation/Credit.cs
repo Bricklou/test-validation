@@ -28,6 +28,8 @@ public class Credit
     
     public void Pay(double amount, int months = 1)
     {
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(amount, RemainingAmount);
+        
         PaidAmount += amount;
         RemainingDuration -= months;
     }

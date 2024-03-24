@@ -51,4 +51,12 @@ public class CreditTest
         Assert.Equal(40000, credit.RemainingAmount);
         Assert.Equal(9 * MonthPerYear - 1, credit.RemainingDuration);
     }
+    
+    [Fact]
+    public void CreditTest_ThrowError_WhenPayMoreThanRemainingAmount()
+    {
+        var credit = new Credit(50000, 9 * MonthPerYear, 1);
+        credit.Pay(10000);
+        Assert.Throws<ArgumentOutOfRangeException>(() => credit.Pay(50000));
+    }
 }
