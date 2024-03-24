@@ -2,7 +2,7 @@ namespace SimulationCredits;
 
 public class ArgumentsParser
 {
-    public void Parse(string[] args)
+    public Credit Parse(string[] args)
     {
         if (args.Length != 3)
         {
@@ -19,9 +19,7 @@ public class ArgumentsParser
             throw new ArgumentException("Argument parser accept only numbers");
         }
 
-        if (amount <= 50_000 || duration < 0 || duration > 25 || rate <= 0)
-        {
-            throw new ArgumentOutOfRangeException("Arguments are out of range");
-        }
+        var credit = new Credit(amount, duration, rate);
+        return credit;
     }
 }

@@ -56,4 +56,12 @@ public class ArgumentParserTest
         Assert.Throws<ArgumentOutOfRangeException>(() => parser.Parse(["50000", TwentySixYears.ToString(), "1,0"]));
         Assert.Throws<ArgumentOutOfRangeException>(() => parser.Parse(["50000", TwentySixYears.ToString(), "1,0"]));
     }
+
+    [Fact]
+    public void ParseInputTest_WithValidValuesArguments_ReturnsCredit()
+    {
+        var credit = parser.Parse(["50000", NineYears.ToString(), "1"]);
+
+        Assert.IsType<Credit>(credit);
+    }
 }
