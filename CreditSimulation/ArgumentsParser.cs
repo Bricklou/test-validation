@@ -4,6 +4,9 @@ public class ArgumentsParser
 {
     public void Parse(string[] args)
     {
-        throw new ArgumentException("No arguments provided.");
+        if (args.Length != 3)
+        {
+            throw new ArgumentException("No arguments provided.");
+        }
     }
 }
