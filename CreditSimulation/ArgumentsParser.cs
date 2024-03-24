@@ -6,7 +6,7 @@ public class ArgumentsParser
     {
         if (args.Length != 3)
         {
-            throw new ArgumentException("No arguments provided.");
+            throw new ArgumentException("Arguments parser accept only 3 parameters");
         }
     }
 }
