@@ -64,4 +64,15 @@ public class ArgumentParserTest
 
         Assert.IsType<Credit>(credit);
     }
+
+    [Fact]
+    public void ParseInputTest_WithValidValuesArguments_HaveValidValues()
+    {
+        var credit = parser.Parse(["50000", NineYears.ToString(), "1"]);
+
+
+        Assert.Equal(50_000, credit.Amount);
+        Assert.Equal(NineYears, credit.Duration);
+        Assert.Equal(1, credit.Rate);
+    }
 }

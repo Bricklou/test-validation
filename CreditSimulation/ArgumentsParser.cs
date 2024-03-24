@@ -4,10 +4,7 @@ public class ArgumentsParser
 {
     public Credit Parse(string[] args)
     {
-        if (args.Length != 3)
-        {
-            throw new ArgumentException("Arguments parser accept only 3 parameters");
-        }
+        if (args.Length != 3) throw new ArgumentException("Arguments parser accept only 3 parameters");
 
 
         if (
@@ -15,9 +12,7 @@ public class ArgumentsParser
             !int.TryParse(args[1], out var duration) ||
             !double.TryParse(args[2], out var rate)
         )
-        {
             throw new ArgumentException("Argument parser accept only numbers");
-        }
 
         var credit = new Credit(amount, duration, rate);
         return credit;
