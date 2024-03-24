@@ -53,10 +53,17 @@ public class CreditTest
     }
     
     [Fact]
-    public void CreditTest_ThrowError_WhenPayMoreThanRemainingAmount()
+    public void CreditTest_WhenPayMoreThanRemainingAmount_ThrowError()
     {
         var credit = new Credit(50000, 9 * MonthPerYear, 1);
         credit.Pay(10000);
         Assert.Throws<ArgumentOutOfRangeException>(() => credit.Pay(50000));
+    }
+    
+    [Fact]
+    public void CreditTest_WhenMoreMonthsThanRemainingDuration_ThrowError()
+    {
+        var credit = new Credit(50000, 9 * MonthPerYear, 1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => credit.Pay(10000, 10 * MonthPerYear));
     }
 }
