@@ -17,7 +17,7 @@ public class AbstractBoardGame<TCase> where TCase : AbstractCase
     {
         return Rules.Any(rule => rule.Check(_grid, x, y));
     }
-    
+
     protected bool CheckTie()
     {
         return _grid.IsFull();

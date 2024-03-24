@@ -7,5 +7,8 @@ public class Program
         var parser = new ArgumentsParser();
 
         var credit = parser.Parse(args);
+        var calculator = new CreditCalculator();
+
+        var monthlyPayment = calculator.Calculate(credit);
     }
 }

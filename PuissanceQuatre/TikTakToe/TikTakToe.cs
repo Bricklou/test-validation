@@ -6,17 +6,19 @@ namespace PuissanceQuatre.TikTakToe;
 public class TikTakToe : AbstractBoardGame<AbstractTikTakToeCase>
 {
     private const uint TikTakToeWinLength = 3;
-    
+
     private readonly ConsoleGui<AbstractTikTakToeCase> _gui = new();
     private bool _exitGame;
     private bool _playerTurn = true;
-    
-    public TikTakToe(): base(TikTakToeCaseFactory.CreateTikTakToeGrid(), [
+
+    public TikTakToe() : base(TikTakToeCaseFactory.CreateTikTakToeGrid(), [
         new DiagonalRule<AbstractTikTakToeCase>(TikTakToeWinLength),
         new HorizontalRule<AbstractTikTakToeCase>(TikTakToeWinLength),
         new VerticalRule<AbstractTikTakToeCase>(TikTakToeWinLength)
-    ]) {}
-    
+    ])
+    {
+    }
+
     public void GameLoop()
     {
         while (!_exitGame)
@@ -48,7 +50,7 @@ public class TikTakToe : AbstractBoardGame<AbstractTikTakToeCase>
             {
                 _gui.ShowMessage("Appuyer sur [Echap] pour quitter, [Entrer] pour rejouer.");
                 var invalidKey = true;
-                
+
                 // TODO: This code should be handled inside the ConsoleGui class since it is GUI related (especially Console related)
                 while (invalidKey)
                 {
@@ -91,7 +93,7 @@ public class TikTakToe : AbstractBoardGame<AbstractTikTakToeCase>
             moved = true;
             _exitGame = false;
         }
-        
+
         return (x, y);
     }
 
