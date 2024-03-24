@@ -39,4 +39,16 @@ public class CreditTest
         Assert.Equal(9 * MonthPerYear, credit.Duration);
         Assert.Equal(1, credit.Rate);
     }
+
+    [Fact]
+    public void CreditTest_PayFunctionCalled_WithOneMonth()
+    {
+        var credit = new Credit(50000, 9 * MonthPerYear, 1);
+        credit.Pay(10000);
+        
+        Assert.Equal(50000, credit.TotalAmount);
+        Assert.Equal(10000, credit.PaidAmount);
+        Assert.Equal(40000, credit.RemainingAmount);
+        Assert.Equal(9 * MonthPerYear - 1, credit.RemainingDuration);
+    }
 }
