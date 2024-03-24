@@ -17,4 +17,10 @@ public class ArgumentParserTest
     {
         Assert.Throws<ArgumentException>(() => parser.Parse(["arg1", "arg2", "arg3", "arg4"]));
     }
+
+    [Fact]
+    public void ParseInputTest_WithTooFewArguments_ThrowError()
+    {
+        Assert.Throws<ArgumentException>(() => parser.Parse(["arg1", "arg2"]));
+    }
 }
