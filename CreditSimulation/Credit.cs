@@ -44,14 +44,21 @@ public class Credit
 
         for (var i = 0; i < Duration; i++)
         {
-            var paidAmount = calculator.Calculate(this);
-            var dueAmount = new DueAmount(i + 1, paidAmount, RemainingAmount);
-            dueAmounts.Add(dueAmount);
-
+            var dueAmount = ComputeSingleDueAmount(calculator);
             if (dueAmount.PaidAmount <= 0) break;
-            Pay(dueAmount.PaidAmount < RemainingAmount ? dueAmount.PaidAmount : RemainingAmount);
+
+            dueAmounts.Add(dueAmount);
         }
 
         return dueAmounts;
+    }
+
+    public DueAmount ComputeSingleDueAmount(ICalculator calculator)
+    {
+        var paidAmount = calculator.Calculate(this);
+        var dueAmount = new DueAmount(1, paidAmount, RemainingAmount);
+
+        Pay(dueAmount.PaidAmount < RemainingAmount ? dueAmount.PaidAmount : RemainingAmount);
+        return dueAmount;
     }
 }
