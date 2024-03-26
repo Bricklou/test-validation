@@ -28,3 +28,13 @@ public class CsvOutputTest
     {
         Assert.Throws<ArgumentNullException>(() => new CsvOutput(""));
     }
+
+    [Fact]
+    public void CsvOutput_Serialize_ToString()
+    {
+        var output = new CsvOutput("credit.csv");
+        var csv = output.ToString(FakeCredit, FakeAmounts);
+
+        Assert.NotEmpty(csv);
+        Assert.Equal(ExpectedCsv, csv);
+    }
