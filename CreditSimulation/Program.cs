@@ -1,4 +1,4 @@
-﻿namespace SimulationCredits;
+namespace SimulationCredits;
 
 public class Program
 {
@@ -11,5 +11,7 @@ public class Program
 
         var monthlyPayment = calculator.Calculate(credit);
         var computedData = credit.ComputeDueAmounts(calculator);
+        
+        var output = new CsvOutput("credit.csv");
     }
 }
