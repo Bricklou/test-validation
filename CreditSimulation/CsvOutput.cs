@@ -1,5 +1,5 @@
 namespace SimulationCredits;
 
-public class CsvExporter
+public class CsvOutput
 {
 }

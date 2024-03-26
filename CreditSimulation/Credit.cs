@@ -19,7 +19,7 @@ public class Credit
         Rate = rate;
     }
 
-    public int TotalAmount { get; }
+    public double TotalAmount { get; }
     public double PaidAmount { get; private set; }
     public double RemainingAmount => TotalAmount - PaidAmount;
 
@@ -30,11 +30,27 @@ public class Credit
     public void Pay(double amount, int months = 1)
     {
         ArgumentOutOfRangeException.ThrowIfGreaterThan(amount, RemainingAmount);
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(amount);
+        ArgumentOutOfRangeException.ThrowIfNegative(amount);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(months, RemainingDuration);
-        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(months);
+        ArgumentOutOfRangeException.ThrowIfNegative(months);
 
         PaidAmount += amount;
         RemainingDuration -= months;
+    }
+
+    public List<DueAmount> ComputeDueAmounts(ICalculator calculator)
+    {
+        var dueAmounts = new List<DueAmount>();
+
+        for (var i = 0; i < Duration; i++)
+        {
+            var dueAmount = new DueAmount(i + 1, calculator.Calculate(this));
+            dueAmounts.Add(dueAmount);
+
+            if (dueAmount.Amount <= 0) break;
+            Pay(dueAmount.Amount < RemainingAmount ? dueAmount.Amount : RemainingAmount);
+        }
+
+        return dueAmounts;
     }
 }
