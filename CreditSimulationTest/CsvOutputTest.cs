@@ -22,3 +22,9 @@ public class CsvOutputTest
     {
         Assert.Throws<ArgumentNullException>(() => new CsvOutput(null));
     }
+
+    [Fact]
+    public void CsvOutput_Should_ThrowError_When_Path_Is_Empty()
+    {
+        Assert.Throws<ArgumentNullException>(() => new CsvOutput(""));
+    }
