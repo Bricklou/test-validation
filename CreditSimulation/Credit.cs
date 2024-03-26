@@ -44,11 +44,12 @@ public class Credit
 
         for (var i = 0; i < Duration; i++)
         {
-            var dueAmount = new DueAmount(i + 1, calculator.Calculate(this));
+            var paidAmount = calculator.Calculate(this);
+            var dueAmount = new DueAmount(i + 1, paidAmount, RemainingAmount);
             dueAmounts.Add(dueAmount);
 
-            if (dueAmount.Amount <= 0) break;
-            Pay(dueAmount.Amount < RemainingAmount ? dueAmount.Amount : RemainingAmount);
+            if (dueAmount.PaidAmount <= 0) break;
+            Pay(dueAmount.PaidAmount < RemainingAmount ? dueAmount.PaidAmount : RemainingAmount);
         }
 
         return dueAmounts;

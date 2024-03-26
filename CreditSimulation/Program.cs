@@ -10,5 +10,6 @@ public class Program
         var calculator = new CreditCalculator();
 
         var monthlyPayment = calculator.Calculate(credit);
+        var computedData = credit.ComputeDueAmounts(calculator);
     }
 }
