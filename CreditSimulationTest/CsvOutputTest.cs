@@ -64,4 +64,19 @@ public class CsvOutputTest
 
         CleanCsv(pathName);
     }
+
+    [Fact]
+    public void CsvOutput_Shoud_Export_Csv_With_Expected_Values()
+    {
+        var pathName = GenerateRandomName();
+        var output = new CsvOutput(pathName);
+        output.Export(FakeCredit, FakeAmounts);
+
+        var csv = File.ReadAllText(pathName);
+
+        Assert.NotEmpty(csv);
+        Assert.Equal(ExpectedCsv, csv);
+
+        CleanCsv(pathName);
+    }
 }

@@ -2,10 +2,16 @@ namespace SimulationCredits;
 
 public class CsvOutput
 {
+    private readonly string _path;
+
     public CsvOutput(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
             throw new ArgumentNullException(nameof(path));
+
+        _path = path;
+    }
+
     public string ToString(Credit credit, List<DueAmount> computedData)
     {
         var output = $"{credit.TotalAmount}\n";
@@ -16,6 +22,6 @@ public class CsvOutput
 
     public void Export(Credit credit, List<DueAmount> computedData)
     {
-        File.WriteAllText(_path, "");
+        File.WriteAllText(_path, ToString(credit, computedData));
     }
 }
