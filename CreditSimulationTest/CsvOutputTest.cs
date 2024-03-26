@@ -17,6 +17,18 @@ public class CsvOutputTest
 
     private const string ExpectedCsv = "200000\n1,40000,160000\n2,40000,120000\n3,40000,80000\n4,40000,40000\n5,40000,0\n";
 
+    private void CleanCsv(string pathName)
+    {
+        if (File.Exists(pathName))
+            File.Delete(pathName);
+    }
+
+    private string GenerateRandomName()
+    {
+        var guid = Guid.NewGuid().ToString();
+        return $"{guid}-{CsvPath}";
+    }
+
     [Fact]
     public void CsvOutput_Should_ThrowError_When_Path_Is_Null()
     {
@@ -32,9 +44,24 @@ public class CsvOutputTest
     [Fact]
     public void CsvOutput_Serialize_ToString()
     {
-        var output = new CsvOutput("credit.csv");
+        var pathName = GenerateRandomName();
+        var output = new CsvOutput(pathName);
         var csv = output.ToString(FakeCredit, FakeAmounts);
 
         Assert.NotEmpty(csv);
         Assert.Equal(ExpectedCsv, csv);
+        CleanCsv(pathName);
     }
+
+    [Fact]
+    public void CsvOutput_Should_Export_Csv()
+    {
+        var pathName = GenerateRandomName();
+        var output = new CsvOutput(pathName);
+        output.Export(FakeCredit, FakeAmounts);
+
+        Assert.True(File.Exists(pathName));
+
+        CleanCsv(pathName);
+    }
+}

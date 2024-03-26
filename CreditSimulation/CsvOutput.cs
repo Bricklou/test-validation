@@ -13,5 +13,9 @@ public class CsvOutput
 
         return output;
     }
+
+    public void Export(Credit credit, List<DueAmount> computedData)
+    {
+        File.WriteAllText(_path, "");
     }
 }
