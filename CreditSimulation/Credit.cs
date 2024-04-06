@@ -14,20 +14,24 @@ public class Credit
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(rate);
 
         TotalAmount = totalAmount;
-        Duration = duration;
-        RemainingDuration = duration;
+        RemainingAmount = TotalAmount;
+        
         DurationInMonths = durationInMonths;
         RemainingDurationInMonths = durationInMonths;
+        
         Rate = rate;
+        MonthlyPayment = ComputeMontlyPayment();
     }
 
     public double TotalAmount { get; }
-    public double PaidAmount { get; private set; }
-    public double RemainingAmount => TotalAmount - PaidAmount;
+    public double RemainingAmount { get; private set; }
+    public double PaidAmount => TotalAmount - RemainingAmount;
 
     public int DurationInMonths { get; }
     public int RemainingDurationInMonths { get; private set; }
     public double Rate { get; }
+    
+    public double MonthlyPayment { get; }
 
     public void Pay(double amount, int months = 1)
     {
@@ -36,8 +40,7 @@ public class Credit
         ArgumentOutOfRangeException.ThrowIfGreaterThan(months, RemainingDurationInMonths);
         ArgumentOutOfRangeException.ThrowIfNegative(months);
 
-        PaidAmount += amount;
-        RemainingDuration -= months;
+        RemainingAmount -= amount;
         RemainingDurationInMonths -= months;
     }
 
@@ -54,6 +57,12 @@ public class Credit
         }
 
         return dueAmounts;
+    }
+    
+    private double ComputeMontlyPayment()
+    {
+        var monthlyRate = Rate / 100 / 12;
+        return TotalAmount * (monthlyRate / (1 - Math.Pow(1 + monthlyRate, -DurationInMonths)));
     }
 
     public DueAmount ComputeSingleDueAmount(ICalculator calculator)

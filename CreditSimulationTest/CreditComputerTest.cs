@@ -16,7 +16,7 @@ public class CreditComputerTest
         var monthlyPayment = calculator.Compute(credit);
 
         // Assert
-        Assert.Equal(1287.02, monthlyPayment, 2);
+        Assert.Equal(953.68, monthlyPayment, 2);
     }
 
     [Fact]
@@ -40,6 +40,6 @@ public class CreditComputerTest
         var calculator = new CreditComputer();
         var dueAmounts =  credit.ComputeSingleDueAmount(calculator);
         
-        Assert.Equal(1287.02, dueAmounts.PaidAmount, 2);
+        Assert.Equal(953.68, dueAmounts.PaidAmount, 2);
     }
 }
