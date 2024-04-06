@@ -20,68 +20,52 @@ public class CsvOutputTest
         new DueAmount(5, 40_000, FakeCredit.TotalAmount - 40_000 * 5)
     ];
 
-    private const string ExpectedCsv = "200000\n1,40000,160000\n2,40000,120000\n3,40000,80000\n4,40000,40000\n5,40000,0\n";
-
-    private void CleanCsv(string pathName)
-    {
-        if (File.Exists(pathName))
-            File.Delete(pathName);
-    }
-
-    private string GenerateRandomName()
-    {
-        var guid = Guid.NewGuid().ToString();
-        return $"{guid}-{CsvPath}";
-    }
-
     [Fact]
     public void CsvOutput_Should_ThrowError_When_Path_Is_Null()
     {
-        Assert.Throws<ArgumentNullException>(() => new CsvOutput(null));
+        var fileSystem = new FakeFileSystem();
+        Assert.Throws<ArgumentNullException>(() => new CsvOutput(null, fileSystem));
     }
 
     [Fact]
     public void CsvOutput_Should_ThrowError_When_Path_Is_Empty()
     {
-        Assert.Throws<ArgumentNullException>(() => new CsvOutput(""));
+        var fileSystem = new FakeFileSystem();
+        Assert.Throws<ArgumentNullException>(() => new CsvOutput("", fileSystem));
     }
 
     [Fact]
     public void CsvOutput_Serialize_ToString()
     {
-        var pathName = GenerateRandomName();
-        var output = new CsvOutput(pathName);
+        var fileSystem = new FakeFileSystem();
+
+        var output = new CsvOutput(CsvPath, fileSystem);
         var csv = output.ToString(FakeCredit, FakeAmounts);
 
         Assert.NotEmpty(csv);
         Assert.Equal(ExpectedCsv, csv);
-        CleanCsv(pathName);
     }
 
     [Fact]
     public void CsvOutput_Should_Export_Csv()
     {
-        var pathName = GenerateRandomName();
-        var output = new CsvOutput(pathName);
+        var fileSystem = new FakeFileSystem();
+        var output = new CsvOutput(CsvPath, fileSystem);
         output.Export(FakeCredit, FakeAmounts);
 
-        Assert.True(File.Exists(pathName));
-
-        CleanCsv(pathName);
+        Assert.True(fileSystem.Exists(CsvPath));
     }
 
     [Fact]
     public void CsvOutput_Should_Export_Csv_With_Expected_Values()
     {
-        var pathName = GenerateRandomName();
-        var output = new CsvOutput(pathName);
+        var fileSystem = new FakeFileSystem();
+        var output = new CsvOutput(CsvPath, fileSystem);
         output.Export(FakeCredit, FakeAmounts);
 
-        var csv = File.ReadAllText(pathName);
+        var csv = File.ReadAllText(CsvPath);
 
         Assert.NotEmpty(csv);
         Assert.Equal(ExpectedCsv, csv);
-
-        CleanCsv(pathName);
     }
 }

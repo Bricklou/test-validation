@@ -10,8 +10,9 @@ public class Program
         var calculator = new CreditComputer();
 
         var computedData = credit.ComputeDueAmounts(calculator);
-        
-        var output = new CsvOutput("credit.csv");
+
+        var fileSystem = new FileSystem();
+        var output = new CsvOutput("credit.csv", fileSystem);
         output.Export(credit, computedData);
     }
 }
