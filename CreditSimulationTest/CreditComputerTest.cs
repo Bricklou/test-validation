@@ -31,15 +31,15 @@ public class CreditComputerTest
         Assert.Equal(0, credit.RemainingAmount);
         Assert.Equal(0, credit.RemainingDurationInMonths);
     }
-    
-    
+
+
     [Fact]
     public void CreditTest_ShouldComputeSingleDueAmount()
     {
         var credit = new Credit(200_000, 15 * MonthPerYear, 2);
         var calculator = new CreditComputer();
-        var dueAmounts =  credit.ComputeSingleDueAmount(calculator);
-        
+        var dueAmounts = credit.ComputeSingleDueAmount(calculator);
+
         Assert.Equal(953.68, dueAmounts.PaidAmount, 2);
     }
 }

@@ -15,10 +15,10 @@ public class Credit
 
         TotalAmount = totalAmount;
         RemainingAmount = TotalAmount;
-        
+
         DurationInMonths = durationInMonths;
         RemainingDurationInMonths = durationInMonths;
-        
+
         Rate = rate;
         MonthlyPayment = ComputeMontlyPayment();
     }
@@ -30,7 +30,7 @@ public class Credit
     public int DurationInMonths { get; }
     public int RemainingDurationInMonths { get; private set; }
     public double Rate { get; }
-    
+
     public double MonthlyPayment { get; }
 
     public void Pay(double amount, int months = 1)
@@ -58,7 +58,7 @@ public class Credit
 
         return dueAmounts;
     }
-    
+
     private double ComputeMontlyPayment()
     {
         var monthlyRate = Rate / 100 / 12;
