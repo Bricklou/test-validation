@@ -36,7 +36,7 @@ public class CreditTest
         Assert.Equal(50000, credit.TotalAmount);
         Assert.Equal(0, credit.PaidAmount);
         Assert.Equal(50000, credit.RemainingAmount);
-        Assert.Equal(9 * MonthPerYear, credit.Duration);
+        Assert.Equal(9 * MonthPerYear, credit.DurationInMonths);
         Assert.Equal(1, credit.Rate);
     }
 
@@ -49,7 +49,7 @@ public class CreditTest
         Assert.Equal(50000, credit.TotalAmount);
         Assert.Equal(10000, credit.PaidAmount);
         Assert.Equal(40000, credit.RemainingAmount);
-        Assert.Equal(9 * MonthPerYear - 1, credit.RemainingDuration);
+        Assert.Equal(9 * MonthPerYear - 1, credit.RemainingDurationInMonths);
     }
 
     [Fact]

@@ -1,8 +1,8 @@
 namespace SimulationCredits;
 
-public class CreditCalculator : ICalculator
+public class CreditComputer : ICalculator
 {
-    public double Calculate(Credit credit)
+    public double Compute(Credit credit)
     {
         var monthlyRate = credit.Rate / 100 / 12;
         var monthlyPayment =

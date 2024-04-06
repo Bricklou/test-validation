@@ -2,5 +2,5 @@ namespace SimulationCredits;
 
 public interface ICalculator
 {
-    public double Calculate(Credit credit);
+    public double Compute(Credit credit);
 }

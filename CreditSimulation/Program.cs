@@ -7,7 +7,7 @@ public class Program
         var parser = new ArgumentsParser();
 
         var credit = parser.Parse(args);
-        var calculator = new CreditCalculator();
+        var calculator = new CreditComputer();
 
         var computedData = credit.ComputeDueAmounts(calculator);
         

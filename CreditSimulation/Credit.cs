@@ -4,18 +4,20 @@ public class Credit
 {
     private const int MonthPerYear = 12;
 
-    public Credit(int totalAmount, int duration, double rate)
+    public Credit(int totalAmount, int durationInMonths, double rate)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(totalAmount, 50_000);
 
-        if (duration is < 9 * MonthPerYear or > 25 * MonthPerYear)
-            throw new ArgumentOutOfRangeException(nameof(duration));
+        if (durationInMonths is < 9 * MonthPerYear or > 25 * MonthPerYear)
+            throw new ArgumentOutOfRangeException(nameof(durationInMonths));
 
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(rate);
 
         TotalAmount = totalAmount;
         Duration = duration;
         RemainingDuration = duration;
+        DurationInMonths = durationInMonths;
+        RemainingDurationInMonths = durationInMonths;
         Rate = rate;
     }
 
@@ -23,26 +25,27 @@ public class Credit
     public double PaidAmount { get; private set; }
     public double RemainingAmount => TotalAmount - PaidAmount;
 
-    public int Duration { get; }
-    public int RemainingDuration { get; private set; }
+    public int DurationInMonths { get; }
+    public int RemainingDurationInMonths { get; private set; }
     public double Rate { get; }
 
     public void Pay(double amount, int months = 1)
     {
         ArgumentOutOfRangeException.ThrowIfGreaterThan(amount, RemainingAmount);
         ArgumentOutOfRangeException.ThrowIfNegative(amount);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(months, RemainingDuration);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(months, RemainingDurationInMonths);
         ArgumentOutOfRangeException.ThrowIfNegative(months);
 
         PaidAmount += amount;
         RemainingDuration -= months;
+        RemainingDurationInMonths -= months;
     }
 
     public List<DueAmount> ComputeDueAmounts(ICalculator calculator)
     {
         var dueAmounts = new List<DueAmount>();
 
-        for (var i = 0; i < Duration; i++)
+        for (var i = 0; i < DurationInMonths; i++)
         {
             var dueAmount = ComputeSingleDueAmount(calculator);
             if (dueAmount.PaidAmount <= 0) break;
@@ -55,7 +58,7 @@ public class Credit
 
     public DueAmount ComputeSingleDueAmount(ICalculator calculator)
     {
-        var paidAmount = calculator.Calculate(this);
+        var paidAmount = calculator.Compute(this);
         var dueAmount = new DueAmount(1, paidAmount, RemainingAmount);
 
         Pay(dueAmount.PaidAmount < RemainingAmount ? dueAmount.PaidAmount : RemainingAmount);
