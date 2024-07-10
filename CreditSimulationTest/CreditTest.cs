@@ -26,18 +26,24 @@ public class CreditTest
         Assert.Throws<ArgumentOutOfRangeException>(() => new Credit(49999, 9 * MonthPerYear, 1));
         Assert.Throws<ArgumentOutOfRangeException>(() => new Credit(50000, 8 * MonthPerYear, 1));
         Assert.Throws<ArgumentOutOfRangeException>(() => new Credit(50000, 26 * MonthPerYear, 1));
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Credit(50000, 26 * MonthPerYear, 1));
     }
 
     [Fact]
     public void CreditTest_WithValidValuesArguments()
     {
-        var credit = new Credit(50000, 9 * MonthPerYear, 1);
+        var credit = new Credit(50_000, 9 * MonthPerYear, 1);
         Assert.Equal(50000, credit.TotalAmount);
         Assert.Equal(0, credit.PaidAmount);
         Assert.Equal(50000, credit.RemainingAmount);
         Assert.Equal(9 * MonthPerYear, credit.DurationInMonths);
         Assert.Equal(1, credit.Rate);
+
+        var credit2 = new Credit(50_000, 25 * MonthPerYear, 1);
+        Assert.Equal(50000, credit2.TotalAmount);
+        Assert.Equal(0, credit2.PaidAmount);
+        Assert.Equal(50000, credit2.RemainingAmount);
+        Assert.Equal(25 * MonthPerYear, credit2.DurationInMonths);
+        Assert.Equal(1, credit2.Rate);
     }
 
     [Fact]

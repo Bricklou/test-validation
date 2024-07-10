@@ -27,4 +27,8 @@
         <ProjectReference Include="..\CreditSimulation\CreditSimulation.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="StrykerOutput\" />
+    </ItemGroup>
+
 </Project>
